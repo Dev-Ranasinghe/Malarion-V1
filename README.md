@@ -1,11 +1,12 @@
-# Detecting Malaria using Deep Learning 🦟🦠
+# Malarion-V1 🧬
+
+**AI-Powered Malaria Detection with Explainable AI**
+
+*Developed by: **Dev Ranasinghe***
 
 <p align="center">
-  <a href="https://github.com/HarshCasper/Malaria-Detection">
     <img src="https://pngimage.net/wp-content/uploads/2018/06/malaria-in-png-1.png" alt="Logo" width="150" height="150">
-  </a>
-
-## 📌 Introduction
+</p>
 
 This Machine Learning Web Application utilizes a Two-Layered Convolutional Neural Network to process the Cell Images and predict if they are Malarial with an accuracy of nearly 95%. The [Dataset](https://www.kaggle.com/iarunava/cell-images-for-detecting-malaria) to process the Deep Learning Algorithm is taken from the official US National Library of Medicine's NIH Website which is a repository of segmented cells from the thin blood smear slide images from the Malaria Screener research activity.
 
@@ -59,4 +60,18 @@ python app.py
 ## 📜 LICENSE
 
 [MIT](LICENSE)
-# Malarion-V1
+
+---
+
+## 👨‍💻 Author
+
+**Dev Ranasinghe**
+- GitHub: [@Dev-Ranasinghe](https://github.com/Dev-Ranasinghe)
+- Project: Malarion-V1
+
+### Enhanced Features (v1)
+- ✨ Grad-CAM explainability visualization
+- 🎨 Modern glassmorphism UI with 3D canvas animation
+- 📊 Interactive heatmap overlays for model interpretability
+- 📱 Multi-page application with detailed documentation
+- 🔍 AI transparency for medical applications
