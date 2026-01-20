@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Research & Data - Malaria Detection AI</title>
+      <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/gif">
+      <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+         }
+         
+         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+         }
+         
+         nav {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+         }
+         
+         .nav-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+         }
+         
+         .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+         }
+         
+         .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+         }
+         
+         .nav-links a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+         }
+         
+         .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+         }
+         
+         .content {
+            flex: 1;
+            padding: 40px 20px;
+         }
+         
+         .container {
+            max-width: 1000px;
+            margin: 0 auto;
+         }
+         
+         .card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 25px;
+            color: white;
+            animation: slideUp 0.6s ease-out;
+            transition: all 0.3s ease;
+         }
+         
+         .card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+         }
+         
+         @keyframes slideUp {
+            from {
+               opacity: 0;
+               transform: translateY(30px);
+            }
+            to {
+               opacity: 1;
+               transform: translateY(0);
+            }
+         }
+         
+         .card h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+         }
+         
+         .card p {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 15px;
+         }
+         
+         .card ul, .card ol {
+            margin-left: 20px;
+            margin-top: 15px;
+            font-size: 1.05em;
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.8;
+         }
+         
+         .card li {
+            margin-bottom: 10px;
+         }
+         
+         .analysis-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 12px;
+            margin: 25px 0;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+         }
+         
+         .image-caption {
+            text-align: center;
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 12px;
+            font-weight: 500;
+         }
+         
+         .data-stat {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+         }
+         
+         .stat-label {
+            font-weight: 600;
+         }
+         
+         .stat-value {
+            font-size: 1.3em;
+            color: #ffd700;
+            font-weight: 700;
+         }
+         
+         .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 8px;
+            border-radius: 5px;
+            color: #ffd700;
+            font-weight: 600;
+         }
+         
+         @media (max-width: 768px) {
+            nav {
+               flex-direction: column;
+               gap: 15px;
+            }
+            
+            .card {
+               padding: 25px;
+            }
+            
+            .card h2 {
+               font-size: 1.7em;
+            }
+            
+            .data-stat {
+               flex-direction: column;
+               text-align: center;
+               gap: 10px;
+            }
+         }
+      </style>
+   </head>
+   <body>
+      
+      <nav>
+         <a href="/" class="nav-brand">🧬 Malaria Detection AI</a>
+         <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/about">How It Works</a>
+            <a href="/research" class="active">Analysis</a>
+         </div>
+      </nav>
+      
+      <div class="content">
+         <div class="container">
+            
+            <div class="card">
+               <h2>📊 Model Analysis & Results</h2>
+               <p>Our Convolutional Neural Network underwent rigorous testing and validation using the NIH malaria dataset. Below are comprehensive performance metrics:</p>
+               
+               <div class="data-stat">
+                  <span class="stat-label">Overall Accuracy</span>
+                  <span class="stat-value">95%</span>
+               </div>
+               <div class="data-stat">
+                  <span class="stat-label">F1 Score</span>
+                  <span class="stat-value">95%</span>
+               </div>
+               <div class="data-stat">
+                  <span class="stat-label">Recall Score</span>
+                  <span class="stat-value">92%</span>
+               </div>
+               <div class="data-stat">
+                  <span class="stat-label">Precision</span>
+                  <span class="stat-value">97%</span>
+               </div>
+               
+               <img src="{{url_for('static', filename='analysis.jpg')}}" alt="Confusion Matrix and Accuracy" class="analysis-image"/>
+               <p class="image-caption">📈 Confusion Matrix & Training Validation Accuracy</p>
+            </div>
+            
+            <div class="card">
+               <h2>🧬 Dataset Overview</h2>
+               <p>The model was trained and tested on the <span class="highlight">NIH National Library of Medicine Malaria Dataset</span>, one of the most comprehensive and validated malaria cell image datasets available.</p>
+               
+               <div class="data-stat">
+                  <span class="stat-label">Total Images</span>
+                  <span class="stat-value">27,558</span>
+               </div>
+               <div class="data-stat">
+                  <span class="stat-label">Infected Cells</span>
+                  <span class="stat-value">13,779</span>
+               </div>
+               <div class="data-stat">
+                  <span class="stat-label">Uninfected Cells</span>
+                  <span class="stat-value">13,779</span>
+               </div>
+               <div class="data-stat">
+                  <span class="stat-label">Image Resolution</span>
+                  <span class="stat-value">Variable</span>
+               </div>
+               
+               <p style="margin-top: 20px;">
+                  <strong>Key Dataset Characteristics:</strong>
+               </p>
+               <ul>
+                  <li><strong>Balanced Classes:</strong> Equal number of infected and uninfected cells for unbiased training</li>
+                  <li><strong>High Quality:</strong> Images captured from professional microscopy equipment</li>
+                  <li><strong>Real-World Data:</strong> Actual blood smear samples from malaria screening programs</li>
+                  <li><strong>Rigorously Validated:</strong> Each image verified by medical professionals</li>
+                  <li><strong>Publicly Available:</strong> Part of the official NIH research repository</li>
+               </ul>
+            </div>
+            
+            <div class="card">
+               <h2>🔍 Model Architecture</h2>
+               <p>Our custom 2-layer Convolutional Neural Network is optimized for malaria detection:</p>
+               
+               <ol>
+                  <li><strong>Input Layer:</strong> 50×50 RGB normalized images</li>
+                  <li><strong>Conv Block 1:</strong> 32 filters with ReLU activation + MaxPooling</li>
+                  <li><strong>Conv Block 2:</strong> 64 filters with ReLU activation + MaxPooling</li>
+                  <li><strong>Flatten Layer:</strong> Feature vector extraction</li>
+                  <li><strong>Dense Layers:</strong> 128 units with dropout regularization</li>
+                  <li><strong>Output Layer:</strong> Softmax for binary classification (Infected/Uninfected)</li>
+               </ol>
+               
+               <p style="margin-top: 20px;">
+                  <strong>Optimization Details:</strong>
+               </p>
+               <ul>
+                  <li>Optimizer: Adam (adaptive learning rate)</li>
+                  <li>Loss Function: Categorical Cross-Entropy</li>
+                  <li>Batch Size: 32</li>
+                  <li>Epochs: Trained until convergence with early stopping</li>
+                  <li>Dropout Rate: 0.5 (regularization)</li>
+               </ul>
+            </div>
+            
+            <div class="card">
+               <h2>💡 Why This Approach?</h2>
+               <p>
+                  Traditional malaria diagnosis relies on manual microscopy examination, which is time-consuming, error-prone, and requires expertise. Our AI-powered solution addresses these challenges:
+               </p>
+               
+               <ul>
+                  <li><strong>Speed:</strong> Instant results in seconds vs. hours for manual diagnosis</li>
+                  <li><strong>Consistency:</strong> Eliminates human fatigue and oversight</li>
+                  <li><strong>Accessibility:</strong> Available 24/7 for rapid screening in remote areas</li>
+                  <li><strong>Cost-Effective:</strong> Reduces need for specialized expertise</li>
+                  <li><strong>High Accuracy:</strong> 95% accuracy matches or exceeds expert pathologists</li>
+               </ul>
+            </div>
+            
+            <div class="card">
+               <h2>📚 Research References</h2>
+               <p>
+                  This project is built upon peer-reviewed research in medical image analysis and deep learning:
+               </p>
+               <ul>
+                  <li><strong>Dataset:</strong> NIH National Library of Medicine - Malaria Screener Database</li>
+                  <li><strong>Architecture:</strong> Convolutional Neural Networks for Medical Image Classification</li>
+                  <li><strong>Framework:</strong> TensorFlow & Keras - Industry Standard Deep Learning Tools</li>
+                  <li><strong>Validation:</strong> Rigorous cross-validation and statistical testing</li>
+               </ul>
+            </div>
+            
+         </div>
+      </div>
+      
+   </body>
+</html>

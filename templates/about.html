@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>How It Works - Malaria Detection AI</title>
+      <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/gif">
+      <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+         }
+         
+         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+         }
+         
+         nav {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+         }
+         
+         .nav-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+         }
+         
+         .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+         }
+         
+         .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+         }
+         
+         .nav-links a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+         }
+         
+         .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+         }
+         
+         .content {
+            flex: 1;
+            padding: 40px 20px;
+         }
+         
+         .container {
+            max-width: 1000px;
+            margin: 0 auto;
+         }
+         
+         .card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 25px;
+            color: white;
+            animation: slideUp 0.6s ease-out;
+            transition: all 0.3s ease;
+         }
+         
+         .card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+         }
+         
+         @keyframes slideUp {
+            from {
+               opacity: 0;
+               transform: translateY(30px);
+            }
+            to {
+               opacity: 1;
+               transform: translateY(0);
+            }
+         }
+         
+         .card h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+         }
+         
+         .card p {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 15px;
+         }
+         
+         .process-step {
+            display: flex;
+            gap: 20px;
+            margin: 25px 0;
+            align-items: flex-start;
+         }
+         
+         .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3em;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+         }
+         
+         .step-content h3 {
+            font-size: 1.3em;
+            margin-bottom: 8px;
+            color: white;
+         }
+         
+         .step-content p {
+            margin: 0;
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.85);
+         }
+         
+         .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+         }
+         
+         .tech-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+         }
+         
+         .tech-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+         }
+         
+         .tech-item strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+         }
+         
+         .tech-item p {
+            font-size: 0.9em;
+            margin: 0;
+         }
+         
+         .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+         }
+         
+         .metric {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+         }
+         
+         .metric-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 8px;
+         }
+         
+         .metric-label {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+         }
+         
+         @media (max-width: 768px) {
+            nav {
+               flex-direction: column;
+               gap: 15px;
+            }
+            
+            .card {
+               padding: 25px;
+            }
+            
+            .card h2 {
+               font-size: 1.7em;
+            }
+            
+            .process-step {
+               flex-direction: column;
+               align-items: center;
+               text-align: center;
+            }
+            
+            .tech-grid {
+               grid-template-columns: 1fr;
+            }
+            
+            .metrics {
+               grid-template-columns: repeat(2, 1fr);
+            }
+         }
+      </style>
+   </head>
+   <body>
+      
+      <nav>
+         <a href="/" class="nav-brand">🧬 Malaria Detection AI</a>
+         <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/about" class="active">How It Works</a>
+            <a href="/research">Analysis</a>
+         </div>
+      </nav>
+      
+      <div class="content">
+         <div class="container">
+            
+            <div class="card">
+               <h2>🔬 Detection Process</h2>
+               <p>Our AI-powered application uses advanced machine learning to detect malaria parasites in blood cell images with remarkable accuracy. Here's how it works:</p>
+               
+               <div class="process-step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                     <h3>Image Upload</h3>
+                     <p>You upload a thin blood smear slide image of a blood cell in high-quality digital format.</p>
+                  </div>
+               </div>
+               
+               <div class="process-step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                     <h3>Image Preprocessing</h3>
+                     <p>The image is automatically resized to 50×50 pixels and normalized to standardize the input for the neural network.</p>
+                  </div>
+               </div>
+               
+               <div class="process-step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                     <h3>Neural Network Analysis</h3>
+                     <p>A trained 2-layer CNN analyzes the cell image to identify characteristics of malarial parasites.</p>
+                  </div>
+               </div>
+               
+               <div class="process-step">
+                  <div class="step-number">4</div>
+                  <div class="step-content">
+                     <h3>Result Generation</h3>
+                     <p>The model outputs a confidence score and classification: Infected or Not Infected with 95% accuracy.</p>
+                  </div>
+               </div>
+               
+               <div class="process-step">
+                  <div class="step-number">5</div>
+                  <div class="step-content">
+                     <h3>AI Explainability</h3>
+                     <p>Grad-CAM (Gradient-weighted Class Activation Mapping) visualizes which regions of the cell image influenced the prediction.</p>
+                  </div>
+               </div>
+            </div>
+            
+            <div class="card">
+               <h2>🔍 AI Explainability with Grad-CAM</h2>
+               <p>We believe that AI transparency is crucial in medical applications. Our system includes <strong>Grad-CAM (Gradient-weighted Class Activation Mapping)</strong> to explain every prediction:</p>
+               
+               <div class="process-step">
+                  <div class="step-number">📊</div>
+                  <div class="step-content">
+                     <h3>What is Grad-CAM?</h3>
+                     <p>Grad-CAM is an advanced visualization technique that highlights the regions of a cell image that were most influential in the model's decision. It uses gradient information from the neural network to create a heatmap showing which areas the model focused on when making predictions.</p>
+                  </div>
+               </div>
+               
+               <div class="process-step">
+                  <div class="step-number">✅</div>
+                  <div class="step-content">
+                     <h3>Why Grad-CAM Matters</h3>
+                     <p><strong>Medical Validation:</strong> Doctors can verify that the AI is detecting the correct biological features (e.g., parasite appearance, cell morphology) rather than learning spurious patterns. <strong>Trust & Transparency:</strong> Visual explanations build confidence in AI-assisted diagnostics. <strong>Quality Control:</strong> Easy identification of borderline or uncertain cases for human review.</p>
+                  </div>
+               </div>
+               
+               <div class="process-step">
+                  <div class="step-number">🎯</div>
+                  <div class="step-content">
+                     <h3>How to Interpret the Heatmap</h3>
+                     <p><strong>Red/Hot regions:</strong> Areas the model found most indicative of the prediction. <strong>Blue/Cool regions:</strong> Areas with less influence on the decision. <strong>Overlay visualization:</strong> The heatmap is overlaid on the original cell image to show exactly which cell features contributed to the diagnosis.</p>
+                  </div>
+               </div>
+            </div>
+            
+            <div class="card">
+               <h2>⚙️ Technology Stack</h2>
+               <p>Our application is built on cutting-edge machine learning and web technologies:</p>
+               
+               <div class="tech-grid">
+                  <div class="tech-item">
+                     <strong>🤖 TensorFlow</strong>
+                     <p>Deep Learning Framework</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>🧠 Keras</strong>
+                     <p>Neural Network API</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>🐍 Python</strong>
+                     <p>Backend Language</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>🌐 Flask</strong>
+                     <p>Web Framework</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>📊 NumPy</strong>
+                     <p>Numerical Computing</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>🖼️ PIL/Pillow</strong>
+                     <p>Image Processing</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>🎨 Scikit-image</strong>
+                     <p>Image Transformation</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>📷 OpenCV</strong>
+                     <p>Computer Vision & Heatmaps</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>🔍 Grad-CAM</strong>
+                     <p>AI Explainability Visualization</p>
+                  </div>
+                  <div class="tech-item">
+                     <strong>🎯 HTML5/CSS3</strong>
+                     <p>Frontend Interface</p>
+                  </div>
+               </div>
+            </div>
+            
+            <div class="card">
+               <h2>📈 Model Performance</h2>
+               <p>Our Convolutional Neural Network achieves exceptional results on the NIH malaria dataset:</p>
+               
+               <div class="metrics">
+                  <div class="metric">
+                     <div class="metric-value">95%</div>
+                     <div class="metric-label">Accuracy</div>
+                  </div>
+                  <div class="metric">
+                     <div class="metric-value">95%</div>
+                     <div class="metric-label">F1 Score</div>
+                  </div>
+                  <div class="metric">
+                     <div class="metric-value">92%</div>
+                     <div class="metric-label">Recall</div>
+                  </div>
+               </div>
+            </div>
+            
+            <div class="card">
+               <h2>📚 Data Source</h2>
+               <p>The model was trained on a comprehensive dataset from the <strong>U.S. National Library of Medicine</strong>, part of the official NIH repository. This dataset contains segmented cells from thin blood smear slide images from the Malaria Screener research activity. The dataset includes:</p>
+               <ul style="margin-left: 20px; margin-top: 15px; font-size: 1.05em; color: rgba(255, 255, 255, 0.95);">
+                  <li>Thousands of labeled cell images</li>
+                  <li>Both infected and uninfected cell samples</li>
+                  <li>High-quality microscopy images</li>
+                  <li>Rigorous medical validation</li>
+               </ul>
+            </div>
+            
+         </div>
+      </div>
+      
+   </body>
+</html>

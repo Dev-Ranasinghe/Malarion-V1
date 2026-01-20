@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>                
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Malaria Detection - AI Powered 🔥</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/gif">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        
+        .glass-container {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 60px 50px;
+            max-width: 1200px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .text-section {
+            flex: 1;
+            min-width: 300px;
+            color: white;
+        }
+        
+        .spline-section {
+            flex: 1;
+            min-width: 300px;
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .spline-section iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            opacity: 0.95;
+        }
+        
+        .upload-glass {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-glass:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-label {
+            display: block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .file-label:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        input[type=submit], .btn-reset {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.05em;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        input[type=submit]:hover, .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        input[type=submit]:active, .btn-reset:active {
+            transform: translateY(0);
+        }
+        
+        .filename-display {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.95em;
+            display: none;
+        }
+        
+        nav {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .nav-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        body {
+            padding-top: 70px;
+        }
+        
+        @media (max-width: 768px) {
+            .glass-container {
+                padding: 40px 30px;
+            }
+            
+            .content-wrapper {
+                gap: 25px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .spline-section {
+                height: 350px;
+            }
+            
+            nav {
+               flex-direction: column;
+               gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-brand">🧬 Malaria Detection AI</a>
+    <div class="nav-links">
+        <a href="/" class="active">Home</a>
+        <a href="/about">How It Works</a>
+        <a href="/research">Analysis</a>
+    </div>
+</nav>
+
+<div class="glass-container">
+    <div class="content-wrapper">
+        <div class="text-section">
+            <h1>🧬 MALARION</h1>
+            <p class="subtitle">
+                Powered by advanced Convolutional Neural Networks and Machine Learning. 
+                Upload a cell image to instantly detect malaria with 95% accuracy.
+            </p>
+            
+            <form action="/result" method="POST" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-glass">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="fileInput" name="pic" accept="image/*" required>
+                        <label for="fileInput" class="file-label">
+                            📁 Click to select or drag an image
+                        </label>
+                    </div>
+                    <div class="filename-display" id="filenameDisplay"></div>
+                </div>
+                
+                <div class="button-group">
+                    <input type="submit" value="Analyze Image">
+                    <button type="reset" class="btn-reset">Clear</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="spline-section" id="visualizationContainer">
+            <canvas id="canvas3d"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const filenameDisplay = document.getElementById('filenameDisplay');
+    const uploadGlass = document.querySelector('.upload-glass');
+    
+    // File input change handler
+    fileInput.addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            filenameDisplay.textContent = '✓ ' + this.files[0].name;
+            filenameDisplay.style.display = 'block';
+        } else {
+            filenameDisplay.style.display = 'none';
+        }
+    });
+    
+    // Drag and drop handler
+    uploadGlass.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.background = 'rgba(255, 255, 255, 0.3)';
+        this.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+    });
+    
+    uploadGlass.addEventListener('dragleave', function(e) {
+        this.style.background = 'rgba(255, 255, 255, 0.2)';
+        this.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+    });
+    
+    uploadGlass.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.background = 'rgba(255, 255, 255, 0.2)';
+        this.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+        
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            filenameDisplay.textContent = '✓ ' + e.dataTransfer.files[0].name;
+            filenameDisplay.style.display = 'block';
+        }
+    });
+    
+    // 3D Canvas Animation
+    const canvas = document.getElementById('canvas3d');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+        const container = document.getElementById('visualizationContainer');
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    let time = 0;
+    const particles = [];
+    
+    // Generate particles (representing cells)
+    for (let i = 0; i < 40; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            z: Math.random() * 200,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            vz: (Math.random() - 0.5) * 1,
+            size: Math.random() * 8 + 2,
+            opacity: Math.random() * 0.5 + 0.3
+        });
+    }
+    
+    function animate() {
+        time += 0.005;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.z += p.vz;
+            
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            if (p.z < 0 || p.z > 200) p.vz *= -1;
+            
+            // Perspective projection
+            const scale = 300 / (300 + p.z);
+            const x = canvas.width / 2 + (p.x - canvas.width / 2) * scale;
+            const y = canvas.height / 2 + (p.y - canvas.height / 2) * scale;
+            
+            ctx.fillStyle = `rgba(102, 126, 234, ${p.opacity * scale})`;
+            ctx.beginPath();
+            ctx.arc(x, y, p.size * scale, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Connect nearby particles
+            particles.forEach(p2 => {
+                const dx = p.x - p2.x;
+                const dy = p.y - p2.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 80 && Math.abs(p.z - p2.z) < 50) {
+                    const scale1 = 300 / (300 + p.z);
+                    const scale2 = 300 / (300 + p2.z);
+                    const x1 = canvas.width / 2 + (p.x - canvas.width / 2) * scale1;
+                    const y1 = canvas.height / 2 + (p.y - canvas.height / 2) * scale1;
+                    const x2 = canvas.width / 2 + (p2.x - canvas.width / 2) * scale2;
+                    const y2 = canvas.height / 2 + (p2.y - canvas.height / 2) * scale2;
+                    
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 80)})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+            });
+        });
+        
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+</script>
+
+</body>
+</html>
