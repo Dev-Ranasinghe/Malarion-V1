@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from tensorflow.keras.models import load_model
 import tensorflow as tf
 import numpy as np
@@ -10,6 +10,13 @@ from tensorflow.keras.preprocessing import image
 from skimage import transform
 import cv2
 import base64
+from model_loader import (
+    load_model as load_custom_model, 
+    get_available_models, 
+    MODEL_NAMES_DISPLAY,
+    get_model_accuracy,
+    save_model_accuracy
+)
 
 # Get the absolute path to the app directory
 app_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,10 +26,34 @@ static_dir = os.path.join(app_dir, 'static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable caching for static files
 app.jinja_env.auto_reload = True  # Enable template auto-reload
-loaded_model = load_model("models/model_malaria.h5")
 
-def ValuePredictor(np_arr):   
-    result = loaded_model.predict(np_arr, verbose=0)
+# Store the currently loaded model and its name
+current_model = None
+current_model_name = None
+
+def load_model_by_name(model_name):
+    """Load a model by name and cache it."""
+    global current_model, current_model_name
+    
+    try:
+        if model_name == 'simple':
+            current_model = load_model("models/model_malaria.h5")
+        else:
+            current_model = load_custom_model(model_name)
+        current_model_name = model_name
+        return True
+    except Exception as e:
+        print(f"Error loading model {model_name}: {e}")
+        return False
+
+def ValuePredictor(np_arr, model_name='simple'):   
+    """Make prediction using the specified model."""
+    if current_model is None or current_model_name != model_name:
+        if not load_model_by_name(model_name):
+            # Fallback to simple model
+            load_model_by_name('simple')
+    
+    result = current_model.predict(np_arr, verbose=0)
     return result[0]
 
 def image_preprocess(img_file):
@@ -192,7 +223,7 @@ def array_to_base64(img_array):
 
 @app.route('/')
 def home():
-  return render_template("index.html")
+  return render_template("index.html", available_models=get_available_models())
 
 @app.route('/about')
 def about():
@@ -202,17 +233,27 @@ def about():
 def research():
   return render_template("research.html")
 
+@app.route('/api/models')
+def get_models():
+    """API endpoint to get available models."""
+    return jsonify(get_available_models())
+
 @app.route('/result', methods = ['POST'])
 def result():
     prediction = ''
     heatmap_img = None
     overlay_img = None
     confidence = 0
+    model_used = 'simple'
+    model_accuracy = None
     
     if request.method == 'POST':
+        # Get the selected model (default to 'simple')
+        model_used = request.form.get('model', 'simple').lower()
+        
         img = request.files['pic']
         img_arr = image_preprocess(img)
-        result_pred = ValuePredictor(img_arr)
+        result_pred = ValuePredictor(img_arr, model_name=model_used)
         
         # Get confidence score
         confidence = float(np.max(result_pred)) * 100
@@ -229,13 +270,17 @@ def result():
             prediction = 'This cell is most likely to be Infected with Malarial Parasite.'
             pred_label = "Infected"
         
+        # Get model accuracy
+        model_accuracy = get_model_accuracy(model_used)
+        print(f"[DEBUG] Retrieved model accuracy for {model_used}: {model_accuracy}")
+        
         # Generate Grad-CAM
         print("\n" + "="*60)
         print("[DEBUG] STARTING GRAD-CAM GENERATION")
         print("="*60)
         try:
             print("[DEBUG] Calling generate_grad_cam...")
-            cam = generate_grad_cam(loaded_model, img_arr, result_class)
+            cam = generate_grad_cam(current_model, img_arr, result_class)
             print(f"[DEBUG] CAM result: {cam is not None}")
             
             if cam is not None:
@@ -262,13 +307,20 @@ def result():
         print("="*60)
         print("\n")
         
+        # Get model display name
+        model_display = MODEL_NAMES_DISPLAY.get(model_used, 'Simple CNN')
+        if model_used == 'simple':
+            model_display = 'Simple CNN'
+        
         print(prediction)
         return render_template("result.html", 
                              prediction=prediction, 
                              pred_label=pred_label,
                              confidence=round(confidence, 2),
                              heatmap_img=heatmap_img,
-                             overlay_img=overlay_img)
+                             overlay_img=overlay_img,
+                             model_used=model_display,
+                             model_accuracy=round(model_accuracy, 2))
 
 if __name__ == "__main__":
   app.run(debug=True)

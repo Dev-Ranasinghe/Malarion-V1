@@ -144,6 +144,55 @@
             transition: width 0.6s ease;
          }
          
+         .model-metrics {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25));
+            border: 2px solid rgba(102, 126, 234, 0.6);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+         }
+         
+         .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+         }
+         
+         .metric-row:last-child {
+            border-bottom: none;
+         }
+         
+         .metric-label {
+            font-size: 1em;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+         }
+         
+         .metric-value {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #87CEEB;
+            background: rgba(135, 206, 235, 0.15);
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(135, 206, 235, 0.5);
+            min-width: 100px;
+            text-align: center;
+         }
+         
+         .metric-value.accuracy {
+            color: #90EE90;
+            border-color: rgba(144, 238, 144, 0.5);
+            background: rgba(144, 238, 144, 0.15);
+         }
+         
          .visualization-section {
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.15);
@@ -289,6 +338,18 @@
                </div>
                <div class="confidence-bar">
                   <div class="confidence-fill" style="width: {{ confidence }}%;">{{ confidence }}%</div>
+               </div>
+               
+               <!-- Model Metrics Section -->
+               <div class="model-metrics">
+                  <div class="metric-row">
+                     <div class="metric-label">🧬 Detection Model</div>
+                     <div class="metric-value">{{ model_used }}</div>
+                  </div>
+                  <div class="metric-row">
+                     <div class="metric-label">📊 Model Accuracy</div>
+                     <div class="metric-value accuracy">{{ model_accuracy }}%</div>
+                  </div>
                </div>
             </div>
             

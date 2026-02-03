@@ -180,6 +180,74 @@
             font-size: 0.95em;
             display: none;
         }
+
+        .model-selector {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .model-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .model-dropdown {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(102, 126, 234, 0.6);
+            border-radius: 10px;
+            background: rgba(102, 126, 234, 0.15);
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .model-dropdown:hover {
+            background: rgba(102, 126, 234, 0.25);
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .model-dropdown:focus {
+            outline: none;
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 1);
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.6);
+        }
+
+        .model-dropdown option {
+            background: #764ba2;
+            color: white;
+            padding: 12px;
+            font-size: 1em;
+        }
+
+        .model-dropdown option:hover {
+            background: #667eea;
+        }
+
+        .model-info {
+            margin-top: 12px;
+            font-size: 0.9em;
+            opacity: 0.95;
+            font-style: italic;
+            padding: 10px 14px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid rgba(102, 126, 234, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
         
         nav {
             backdrop-filter: blur(10px);
@@ -291,6 +359,21 @@
                     <div class="filename-display" id="filenameDisplay"></div>
                 </div>
                 
+                <!-- Model Selection -->
+                <div class="model-selector">
+                    <label for="modelSelect" class="model-label">
+                        🧬 <span style="letter-spacing: 0.5px;">SELECT DETECTION MODEL</span>
+                    </label>
+                    <select id="modelSelect" name="model" class="model-dropdown">
+                        <option value="simple">Simple CNN (Original)</option>
+                        <option value="vgg16">VGG16 (Transfer Learning)</option>
+                        <option value="resnet50">ResNet50 (Transfer Learning)</option>
+                        <option value="densenet121">DenseNet121 (Transfer Learning)</option>
+                        <option value="mobilenetv2">MobileNetV2 (Fast & Efficient)</option>
+                    </select>
+                    <div class="model-info" id="modelInfo">Simple CNN: Basic convolutional network</div>
+                </div>
+                
                 <div class="button-group">
                     <input type="submit" value="Analyze Image">
                     <button type="reset" class="btn-reset">Clear</button>
@@ -308,6 +391,23 @@
     const fileInput = document.getElementById('fileInput');
     const filenameDisplay = document.getElementById('filenameDisplay');
     const uploadGlass = document.querySelector('.upload-glass');
+    const modelSelect = document.getElementById('modelSelect');
+    const modelInfo = document.getElementById('modelInfo');
+
+    // Model descriptions
+    const modelDescriptions = {
+        'simple': 'Simple CNN: Basic convolutional network (Original)',
+        'vgg16': 'VGG16: Deep learning with 16 layers, excellent for image classification',
+        'resnet50': 'ResNet50: 50-layer residual network with skip connections for better accuracy',
+        'densenet121': 'DenseNet121: Dense connections for efficient feature reuse',
+        'mobilenetv2': 'MobileNetV2: Lightweight & fast, optimized for mobile devices'
+    };
+
+    // Model selection change handler
+    modelSelect.addEventListener('change', function() {
+        modelInfo.textContent = modelDescriptions[this.value];
+        modelInfo.style.animation = 'fadeIn 0.3s ease';
+    });
     
     // File input change handler
     fileInput.addEventListener('change', function(e) {
@@ -342,6 +442,16 @@
             filenameDisplay.style.display = 'block';
         }
     });
+    
+    // Add fadeIn animation
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes fadeIn {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
     
     // 3D Canvas Animation
     const canvas = document.getElementById('canvas3d');
